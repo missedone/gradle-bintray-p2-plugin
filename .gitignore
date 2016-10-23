@@ -1,0 +1,12 @@
+# Eclipse metadata
+.project
+.classpath
+.settings/
+
+# IntelliJ metadata
+.idea
+*.iml
+
+
+.gradle
+build/
