@@ -34,6 +34,7 @@ class BintrayP2Plugin implements Plugin<Project> {
 
         project.task('publishP2Repo', type: BintrayP2RepoPublishTask) {
             conventionMapping.repoDir = { extension.repoDir }
+            conventionMapping.zippedRepoFile = { extension.zippedRepoFile }
             conventionMapping.override = { extension.override }
             conventionMapping.compositePackage = { extension.compositePackage }
             conventionMapping.zipSitePackage = { extension.zipSitePackage }

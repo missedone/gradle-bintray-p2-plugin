@@ -2,6 +2,7 @@ package com.github.missedone.gradle
 
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
 
 class BintrayP2RepoPublishTask extends AbstractBintrayTask {
@@ -9,6 +10,10 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
     @InputDirectory
     @Optional
     File repoDir
+
+    @InputFile
+    @Optional
+    File zippedRepoFile
 
     @Input
     @Optional
@@ -34,7 +39,10 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
     @Override
     void executeAction() {
         if (repoDir == null) {
-            repoDir = getProject().buildDir
+            repoDir = new File(getProject().buildDir, 'updatesite')
+        }
+        if (zippedRepoFile == null) {
+            zippedRepoFile = new File(getProject().buildDir, 'updatesite.zip')
         }
         if (compositePackage == null) {
             compositePackage = 'composite'
@@ -47,23 +55,18 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         }
         assert repoDir.exists():
                 '''repo dir ${repoDir} does not exist'''
-
-        def updateSiteDir = new File(repoDir, 'updatesite')
-        assert updateSiteDir.exists():
-                '''updatesite dir ${updateSiteDir} does not exist'''
-        def zippedSiteFile = new File(repoDir, 'updatesite.zip')
-        assert zippedSiteFile.exists():
-                '''zipped updatesite file ${zippedSiteFile} does not exist'''
+        assert zippedRepoFile.exists():
+                '''zipped updatesite file ${zippedRepoFile} does not exist'''
 
         if (packageVersion == null) {
-            packageVersion = parsePackageVersion(updateSiteDir)
+            packageVersion = parsePackageVersion(repoDir)
         }
         assert packageVersion != null :
                 '''package version may not be null'''
 
         BintrayClient client = new BintrayClient(apiUrl, user, apiKey)
-        uploadUpdateSite(client, updateSiteDir, updateSitePackage)
-        uploadZippedSite(client, zippedSiteFile)
+        uploadUpdateSite(client, repoDir, updateSitePackage)
+        uploadZippedSite(client, zippedRepoFile)
         updateCompositeUpdateSite(client)
     }
 

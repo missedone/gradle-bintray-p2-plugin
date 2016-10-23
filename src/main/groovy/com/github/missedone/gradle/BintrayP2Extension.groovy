@@ -35,7 +35,8 @@ class BintrayP2Extension {
     // for p2 repo publish
     //
 
-    String repoDir
+    File repoDir
+    File zippedRepoFile
     String compositePackage
     String zipSitePackage
     String updateSitePackage
