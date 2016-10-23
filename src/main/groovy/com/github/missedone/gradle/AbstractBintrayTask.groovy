@@ -1,4 +1,4 @@
-package org.testng.p2.gradle
+package com.github.missedone.gradle
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException

@@ -1,4 +1,4 @@
-package org.testng.p2.gradle
+package com.github.missedone.gradle
 
 import com.jfrog.bintray.gradle.BintrayHttpClientFactory
 import groovyx.net.http.HTTPBuilder

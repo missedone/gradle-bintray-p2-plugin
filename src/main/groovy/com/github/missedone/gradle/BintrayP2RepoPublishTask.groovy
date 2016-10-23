@@ -1,6 +1,5 @@
-package org.testng.p2.gradle
+package com.github.missedone.gradle
 
-import groovy.xml.QName
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.Optional

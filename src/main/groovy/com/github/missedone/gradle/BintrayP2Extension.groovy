@@ -1,4 +1,4 @@
-package org.testng.p2.gradle
+package com.github.missedone.gradle
 
 class BintrayP2Extension {
 
