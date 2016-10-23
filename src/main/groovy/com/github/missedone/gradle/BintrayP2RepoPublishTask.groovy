@@ -53,10 +53,8 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         if (updateSitePackage == null) {
             updateSitePackage = 'updatesites'
         }
-        assert repoDir.exists():
-                '''repo dir ${repoDir} does not exist'''
-        assert zippedRepoFile.exists():
-                '''zipped updatesite file ${zippedRepoFile} does not exist'''
+        assert repoDir.exists(): "repo dir '${repoDir}' does not exist"
+        assert zippedRepoFile.exists(): "zipped updatesite file '${zippedRepoFile}' does not exist"
 
         if (packageVersion == null) {
             packageVersion = parsePackageVersion(repoDir)
@@ -108,7 +106,7 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         else {
             def xmlText = """<?xml version='1.0' encoding='UTF-8'?>
 <?compositeMetadataRepository version='1.0.0'?>
-<repository name='TestNG Composite P2 Repo' type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
+<repository name='${project.name} Composite P2 Repo' type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
     <properties size='2'>
         <property name='p2.timestamp' value='1454086165279'/>
         <property name='p2.atomic.composite.loading' value='true'/>
@@ -137,12 +135,14 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         def featuresDir = new File(updateSiteDir, "features")
         if (featuresDir.exists() && featuresDir.directory) {
             def tree = getProject().fileTree(dir: featuresDir)
-            tree.include('org.testng.p2.feature_*.jar')
+            tree.include('*.feature_*.jar')
             tree.visit {element ->
                 def str = element.file.name
-                str = str.substring('org.testng.p2.feature_'.length())
-                str = str.substring(0, str.length() - '.jar'.length())
-                def idx = str.indexOf('-')
+                def idx = str.indexOf('_')
+                str = str.substring(idx + 1)
+                idx = str.lastIndexOf('.')
+                str = str.substring(0, idx)
+                idx = str.indexOf('-')
                 if (idx > 0) {
                     str = str.substring(0, idx)
                 }
