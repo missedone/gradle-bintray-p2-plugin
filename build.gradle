@@ -20,6 +20,7 @@ version = '1.0.0-SNAPSHOT'
 
 apply plugin: 'groovy'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven'
 
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
@@ -78,6 +79,15 @@ bintray { // task bintrayUpload
 		version {
 			name = project.version
 			attributes = ['gradle-plugin': "com.github.missedone:${project.group}:gradle-bintray-p2-plugin"]
+		}
+	}
+}
+
+// for local development purpose
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			repository(url: "file://$buildDir/mavenrepo")
 		}
 	}
 }
