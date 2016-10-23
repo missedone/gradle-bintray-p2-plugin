@@ -16,7 +16,7 @@ task wrapper(type: Wrapper) {
 }
 
 group = 'com.github.missedone'
-version = '1.0.1'
+version = '1.0.2-SNAPSHOT'
 
 apply plugin: 'groovy'
 apply plugin: 'com.jfrog.bintray'
@@ -62,15 +62,15 @@ def configurePom(def pom) {
 
 	// pom file details
 	pom.project {
-		name 'gradle-bintray-p2-plugin'
+		name pluginName
 		packaging 'jar'
-		description 'The Gradle plugin to publish P2 repo to bintray.com'
-		url 'https://github.com/missedone/gradle-bintray-p2-plugin'
+		description pluginDesc
+		url projectUrl
 
 		scm {
-			url 'scm:git:https://github.com/missedone/gradle-bintray-p2-plugin.git'
-			connection 'scm:git:https://github.com/missedone/gradle-bintray-p2-plugin.git'
-			developerConnection 'scm:git:https://github.com/missedone/gradle-bintray-p2-plugin.git'
+			url "scm:git:${projectUrl}.git"
+			connection "scm:git:${projectUrl}.git"
+			developerConnection "scm:git:${projectUrl}.git"
 		}
 
 		licenses {
@@ -110,10 +110,10 @@ bintray { // task bintrayUpload
 	publish = !project.version.endsWith('-SNAPSHOT')
 
 	pkg {
-		def githubUrl = 'https://github.com/missedone/gradle-bintray-p2-plugin'
+		def githubUrl = projectUrl
 		repo = 'gradle-plugins'
-		name = 'gradle-bintray-p2-plugin'
-		desc = 'The Gradle plugin to publish P2 repo to bintray.com'
+		name = pluginName
+		desc = pluginDesc
 		websiteUrl = githubUrl
 		issueTrackerUrl = "$githubUrl/issues"
 		vcsUrl = "${githubUrl}.git"
