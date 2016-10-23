@@ -6,6 +6,21 @@ Gradle Bintray P2 Plugin
 This Gradle plugin is inspired by [Publish an Eclipse p2 composite repository on Bintray](http://www.lorenzobettini.it/2016/02/publish-an-eclipse-p2-composite-repository-on-bintray/) by @LorenzoBettini.
 Also the official Bintray API doc is a good reference: https://bintray.com/docs/api/
 
+## Usage
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.missedone:gradle-bintray-p2-plugin:1.0.0'
+    }
+}
+
+apply plugin: 'bintray-p2'
+```
+
 ### Tasks
 
 * publishP2Repo - Publish the P2 repo to Bintray, including zipped updatesite as well.
