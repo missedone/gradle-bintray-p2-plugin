@@ -56,6 +56,10 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         assert repoDir.exists(): "repo dir '${repoDir}' does not exist"
         assert zippedRepoFile.exists(): "zipped updatesite file '${zippedRepoFile}' does not exist"
 
+        assert compositePackage ==~ /[A-Za-z0-9]*/
+        assert zipSitePackage ==~ /[A-Za-z0-9]+/
+        assert updateSitePackage ==~ /[A-Za-z0-9]+/
+
         if (packageVersion == null) {
             packageVersion = parsePackageVersion(repoDir)
         }
@@ -118,6 +122,9 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         }
 
         def subsiteLoc = "../${updateSitePackage}/${packageVersion}"
+        if (compositePackage.isEmpty()) {
+            subsiteLoc = "./${updateSitePackage}/${packageVersion}"
+        }
         rootNode.'children'[0].appendNode("child", [location: subsiteLoc])
         new XmlNodePrinter(new PrintWriter(new FileWriter(localFile))).print(rootNode)
 
