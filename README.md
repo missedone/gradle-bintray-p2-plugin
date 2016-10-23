@@ -1,6 +1,8 @@
 Gradle Bintray P2 Plugin
 ====
- 
+
+[![Bintray](https://api.bintray.com/packages/missedone/gradle-plugins/gradle-bintray-p2-plugin/images/download.svg)](https://bintray.com/missedone/gradle-plugins/gradle-bintray-p2-plugin/_latestVersion)
+
 This Gradle plugin is inspired by [Publish an Eclipse p2 composite repository on Bintray](http://www.lorenzobettini.it/2016/02/publish-an-eclipse-p2-composite-repository-on-bintray/) by @LorenzoBettini.
 Also the official Bintray API doc is a good reference: https://bintray.com/docs/api/
 

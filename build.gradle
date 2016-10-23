@@ -16,7 +16,7 @@ task wrapper(type: Wrapper) {
 }
 
 group = 'com.github.missedone'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 
 apply plugin: 'groovy'
 apply plugin: 'com.jfrog.bintray'
@@ -56,14 +56,59 @@ artifacts {
 	archives packageSources
 }
 
+def configurePom(def pom) {
+	// ensure correct artifact ID
+	pom.artifactId = 'gradle-bintray-p2-plugin'
+
+	// pom file details
+	pom.project {
+		name 'gradle-bintray-p2-plugin'
+		packaging 'jar'
+		description 'The Gradle plugin to publish P2 repo to bintray.com'
+		url 'https://github.com/missedone/gradle-bintray-p2-plugin'
+
+		scm {
+			url 'scm:git:https://github.com/missedone/gradle-bintray-p2-plugin.git'
+			connection 'scm:git:https://github.com/missedone/gradle-bintray-p2-plugin.git'
+			developerConnection 'scm:git:https://github.com/missedone/gradle-bintray-p2-plugin.git'
+		}
+
+		licenses {
+			license {
+				name 'The Apache Software License, Version 2.0'
+				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+				distribution 'repo'
+			}
+		}
+
+		developers {
+			developer {
+				id 'missedone'
+				name 'Nick Tan'
+				email 'missedone@gmail.com'
+			}
+		}
+	}
+}
+
+install {
+	repositories.mavenInstaller {
+		// ensure correct artifact ID when installing locally
+		configurePom(pom)
+	}
+}
+
 bintray { // task bintrayUpload
-	user = project.hasProperty('BINTRAY_USER') ? project.getProperty('BINTRAY_USER') : System.getenv('BINTRAY_USER')
-	key = project.hasProperty('BINTRAY_API_KEY') ? project.getProperty('BINTRAY_API_KEY') : System.getenv('BINTRAY_API_KEY')
+	user =System.getenv('BINTRAY_USER')
+	key = System.getenv('BINTRAY_API_KEY')
 
 	configurations = ['archives']
 
+	// Whether to run this as dry-run, without deploying
 	dryRun = false
+	// Whether version should be auto published after an upload 
 	publish = !project.version.endsWith('-SNAPSHOT')
+
 	pkg {
 		def githubUrl = 'https://github.com/missedone/gradle-bintray-p2-plugin'
 		repo = 'gradle-plugins'
@@ -78,16 +123,9 @@ bintray { // task bintrayUpload
 		// version descriptor
 		version {
 			name = project.version
+			released  = new Date()
 			attributes = ['gradle-plugin': "com.github.missedone:${project.group}:gradle-bintray-p2-plugin"]
 		}
 	}
 }
 
-// for local development purpose
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			repository(url: "file://$buildDir/mavenrepo")
-		}
-	}
-}
