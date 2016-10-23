@@ -14,7 +14,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.missedone:gradle-bintray-p2-plugin:1.0.1'
+        classpath 'com.github.missedone:gradle-bintray-p2-plugin:1.0.2'
     }
 }
 
@@ -57,7 +57,8 @@ Task Properties:
 * repoOwner - (Required) The repo owner
 * repoName - (Required) The repo name
 * packageVersion - (Optional) Default get from the generated updatesite under `project.buildDir`
-* repoDir - (Optional, File) The location of the P2 repo, default as `project.buildDir`
+* repoDir - (Optional, File) The location of the P2 repo, default as `project.buildDir/updatesite`
+* zippedRepoFile - (Optional, File) the location of the zipped repo file, default as `project.buildDir/updatesite.zip`
 * compositePackage - (Optional) The Bintray package for composite updatesite, default as `composite`. Please make sure it's created in the Bintray repo before executing the task.
 * zipSitePackage - (Optional) The Bintray package for zipped updatesite, default as `zipped`. Please make sure it's created in the Bintray repo before executing the task.
 * updateSitePackage - (Optional) The Bintray package for updatesite, default as `updatesites`. Please make sure it's created in the Bintray repo before executing the task.
@@ -66,7 +67,13 @@ Example in `build.gradle`:
 ```
 publishP2Repo {
 	repoOwner = 'testng-team'
-	repoName = 'testng-p2-beta'
+	repoName = 'testng-eclipse'
+
+	// set `compositePackage` an empty stirng to store the compoiste update site (compositeContent.xml, compositeArtifacts.xml) to the repo root, for example: http://dl.bintray.com/testng-team/testng-eclipse/
+	compositePackage = ''
+
+    repoDir = new File("target/site")
+    zippedRepoFile = new File("target/site_assembly.zip")
 }
 ```
 
@@ -93,3 +100,7 @@ Task Properties:
 * repoName - (Required) The repo name
 * targetPath - (Required) The relative target path to the package on Bintray
 
+## Example:
+
+* TestNG Eclipse [beta updatesite](http://dl.bintray.com/testng-team/testng-eclipse/), [build.gradle](https://github.com/cbeust/testng-eclipse/blob/master/testng-eclipse-update-site/build.gradle)
+* TestNG P2 [beta updatesite](http://dl.bintray.com/testng-team/testng-p2-beta/), [build.gradle](https://github.com/testng-team/testng-p2/blob/master/build.gradle)
