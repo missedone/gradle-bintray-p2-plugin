@@ -1,9 +1,14 @@
 buildscript {
     repositories {
         jcenter()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
     }
     dependencies {
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.2"
+
+        classpath "com.gradle.publish:plugin-publish-plugin:0.9.6"
     }
 }
 
@@ -21,6 +26,7 @@ version = '1.0.2'
 apply plugin: 'groovy'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven'
+apply plugin: "com.gradle.plugin-publish"
 
 targetCompatibility = "1.7"
 sourceCompatibility = "1.7"
@@ -129,3 +135,16 @@ bintray { // task bintrayUpload
 	}
 }
 
+pluginBundle {
+    website = projectUrl
+    vcsUrl = projectUrl
+    description = pluginDesc
+    tags = ['p2', 'eclipse']
+
+    plugins {
+        greetingsPlugin {
+            id = 'com.github.missedone.bintray-p2'
+            displayName = 'Gradle Bintray P2 plugin'
+        }
+    }
+}
