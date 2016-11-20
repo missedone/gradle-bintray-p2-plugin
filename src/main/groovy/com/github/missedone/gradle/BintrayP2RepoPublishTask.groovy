@@ -4,12 +4,18 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.Optional
+import org.osgi.framework.Version
 
 class BintrayP2RepoPublishTask extends AbstractBintrayTask {
 
     static final String DEFAULT_COMPOSITE_PKG_NAME = 'composite';
     static final String DEFAULT_ZIPPED_PKG_NAME = 'zipped';
     static final String DEFAULT_UPDATESITE_PKG_NAME = 'updatesites';
+
+    static final String MAJOR = 'MAJOR'
+    static final String MINOR = 'MINOR'
+    static final String MICRO = 'MICRO'
+    static final String NONE = 'NONE'
 
     @InputDirectory
     @Optional
@@ -22,6 +28,10 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
     @Input
     @Optional
     String compositePackage
+
+    @Input
+    @Optional
+    String subCompositeStrategy
 
     @Input
     @Optional
@@ -52,6 +62,7 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         }
         zipSitePackage = zipSitePackage ?: DEFAULT_ZIPPED_PKG_NAME
         updateSitePackage = updateSitePackage ?: DEFAULT_UPDATESITE_PKG_NAME
+        subCompositeStrategy = subCompositeStrategy ?: NONE
 
         assert repoDir.exists(): "repo dir '${repoDir}' does not exist"
         assert zippedRepoFile.exists(): "zipped updatesite file '${zippedRepoFile}' does not exist"
@@ -93,11 +104,54 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
     }
 
     private void updateCompositeUpdateSite(BintrayClient client) {
-        def targetPath = "${compositePackage}/compositeContent.xml"
+        def subsiteLoc = "../${updateSitePackage}/${packageVersion}"
+        if (compositePackage.isEmpty()) {
+            subsiteLoc = "./${updateSitePackage}/${packageVersion}"
+        }
+        def targetParent = compositePackage
+
+        if (subCompositeStrategy != NONE) {
+            String ver = packageVersion
+            Version v = new Version(packageVersion)
+            switch (subCompositeStrategy) {
+                case MAJOR:
+                    ver = v.getMajor()
+                    break;
+                case MINOR:
+                    ver = v.getMajor() + "." + v.getMinor()
+                    break;
+                case MICRO:
+                    ver = v.getMajor() + "." + v.getMinor() + "." + v.getMicro()
+                    break;
+            }
+
+            subsiteLoc = "../../${updateSitePackage}/${packageVersion}"
+            if (compositePackage.isEmpty()) {
+                subsiteLoc = "./../${updateSitePackage}/${packageVersion}"
+            }
+
+            targetParent = "${compositePackage}/${ver}"
+
+            updateCompositeSite(client, targetParent, subsiteLoc)
+
+            // reset properties for parent composite
+            subsiteLoc = "./${ver}"
+            targetParent = compositePackage
+        }
+
+        updateCompositeSite(client, targetParent, subsiteLoc)
+    }
+
+    private void updateCompositeSite(BintrayClient client, String targetParent, String subsiteLoc) {
+        def targetPath = "${targetParent}/compositeContent.xml"
         def localFile = new File(repoDir, 'compositeContent.xml')
         try {
+            if (localFile.exists()) {
+                localFile.delete()
+            }
             client.downloadContent(repoOwner, repoName, targetPath, localFile)
         } catch (IOException e) {
+            // log and continue to create one in next step
             logger.error(e.getMessage())
         }
 
@@ -119,11 +173,6 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
             rootNode = new XmlParser().parseText(xmlText)
         }
 
-        def subsiteLoc = "../${updateSitePackage}/${packageVersion}"
-        if (compositePackage.isEmpty()) {
-            subsiteLoc = "./${updateSitePackage}/${packageVersion}"
-        }
-
         def n = rootNode.'children'[0].find { it.@location == subsiteLoc }
         if (n != null) {
             logger.info("child location ${subsiteLoc} already exist, just skip")
@@ -134,12 +183,12 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         new XmlNodePrinter(new PrintWriter(new FileWriter(localFile))).print(rootNode)
 
         logger.lifecycle("Uploading composite updatesite ...")
-        targetPath = "${compositePackage}/compositeContent.xml"
+        targetPath = "${targetParent}/compositeContent.xml"
         client.uploadContent(localFile, repoOwner, repoName, targetPath,
-                                compositePackage, packageVersion, override)
-        targetPath = "${compositePackage}/compositeArtifacts.xml"
+                compositePackage, packageVersion, override)
+        targetPath = "${targetParent}/compositeArtifacts.xml"
         client.uploadContent(localFile, repoOwner, repoName, targetPath,
-                                compositePackage, packageVersion, override)
+                compositePackage, packageVersion, override)
     }
 
     private String parsePackageVersion(File updateSiteDir) {

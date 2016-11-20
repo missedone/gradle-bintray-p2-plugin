@@ -40,4 +40,5 @@ class BintrayP2Extension {
     String compositePackage
     String zipSitePackage
     String updateSitePackage
+    String subCompositeStrategy
 }

@@ -59,9 +59,10 @@ Task Properties:
 * packageVersion - (Optional) Default get from the generated updatesite under `project.buildDir`
 * repoDir - (Optional, File) The location of the P2 repo, default as `project.buildDir/updatesite`
 * zippedRepoFile - (Optional, File) the location of the zipped repo file, default as `project.buildDir/updatesite.zip`
-* compositePackage - (Optional) The Bintray package for composite updatesite, default as `composite`. Please make sure it's created in the Bintray repo before executing the task.
-* zipSitePackage - (Optional) The Bintray package for zipped updatesite, default as `zipped`. Please make sure it's created in the Bintray repo before executing the task.
-* updateSitePackage - (Optional) The Bintray package for updatesite, default as `updatesites`. Please make sure it's created in the Bintray repo before executing the task.
+* compositePackage - (Optional) The Bintray package for composite updatesite, default as `composite`. **Please make sure it's created in the Bintray repo before executing the task**.
+* zipSitePackage - (Optional) The Bintray package for zipped updatesite, default as `zipped`. **Please make sure it's created in the Bintray repo before executing the task**.
+* updateSitePackage - (Optional) The Bintray package for updatesite, default as `updatesites`. **Please make sure it's created in the Bintray repo before executing the task**.
+* subCompositeStrategy - (Optional) the sub composite version strategy 'MAJOR', 'MINOR', 'MICRO', 'NONO'; default as 'NONE'; with this option, it will auto create a sub-compoiste update site named as the version defined by the strategy, the top composite updatesite will reference to this sub site.
 
 Example in `build.gradle`:
 ```

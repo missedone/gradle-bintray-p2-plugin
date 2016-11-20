@@ -39,6 +39,7 @@ class BintrayP2Plugin implements Plugin<Project> {
             conventionMapping.compositePackage = { extension.compositePackage }
             conventionMapping.zipSitePackage = { extension.zipSitePackage }
             conventionMapping.updateSitePackage = { extension.updateSitePackage }
+            conventionMapping.subCompositeStrategy = { extension.subCompositeStrategy }
         }
     }
 
