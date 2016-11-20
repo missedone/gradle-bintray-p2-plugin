@@ -43,19 +43,19 @@ class BintrayP2Plugin implements Plugin<Project> {
     }
 
     private String getApiUrl(Project project, BintrayP2Extension extension) {
-        def apiUrl = (extension.apiUrl == null) ? AbstractBintrayTask.DEFAULT_API_URL : extension.apiUrl
+        def apiUrl = extension.apiUrl ?: AbstractBintrayTask.DEFAULT_API_URL
         return apiUrl
     }
 
     private String getBintrayUser(Project project, BintrayP2Extension extension) {
-        def user = (extension.user == null) ? System.getProperty('BINTRAY_USER') : extension.user
-        user = (user == null) ? System.getenv('BINTRAY_USER') : user
+        def user = extension.user ?: System.getProperty('BINTRAY_USER')
+        user = user ?: System.getenv('BINTRAY_USER')
         return user
     }
 
     private String getApiKey(Project project, BintrayP2Extension extension) {
-        def apiKey = (extension.apiKey == null) ? System.getProperty('BINTRAY_API_KEY') : extension.apiKey
-        apiKey = (apiKey == null) ? System.getenv('BINTRAY_API_KEY') : apiKey
+        def apiKey = extension.apiKey ?: System.getProperty('BINTRAY_API_KEY')
+        apiKey = apiKey ?: System.getenv('BINTRAY_API_KEY')
         return apiKey
     }
 }

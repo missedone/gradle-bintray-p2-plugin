@@ -42,21 +42,12 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
 
     @Override
     void executeAction() {
-        if (repoDir == null) {
-            repoDir = new File(getProject().buildDir, 'updatesite')
-        }
-        if (zippedRepoFile == null) {
-            zippedRepoFile = new File(getProject().buildDir, 'updatesite.zip')
-        }
-        if (compositePackage == null) {
-            compositePackage = DEFAULT_COMPOSITE_PKG_NAME
-        }
-        if (zipSitePackage == null) {
-            zipSitePackage = DEFAULT_ZIPPED_PKG_NAME
-        }
-        if (updateSitePackage == null) {
-            updateSitePackage = DEFAULT_UPDATESITE_PKG_NAME
-        }
+        repoDir = repoDir ?: new File(getProject().buildDir, 'updatesite')
+        zippedRepoFile = zippedRepoFile ?: new File(getProject().buildDir, 'updatesite.zip')
+        compositePackage = compositePackage ?: DEFAULT_COMPOSITE_PKG_NAME
+        zipSitePackage = zipSitePackage ?: DEFAULT_ZIPPED_PKG_NAME
+        updateSitePackage = updateSitePackage ?: DEFAULT_UPDATESITE_PKG_NAME
+
         assert repoDir.exists(): "repo dir '${repoDir}' does not exist"
         assert zippedRepoFile.exists(): "zipped updatesite file '${zippedRepoFile}' does not exist"
 
@@ -64,9 +55,7 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         assert zipSitePackage ==~ /[A-Za-z0-9]+/
         assert updateSitePackage ==~ /[A-Za-z0-9]+/
 
-        if (packageVersion == null) {
-            packageVersion = parsePackageVersion(repoDir)
-        }
+        packageVersion = packageVersion ?: parsePackageVersion(repoDir)
         assert packageVersion != null :
                 '''package version may not be null'''
 
