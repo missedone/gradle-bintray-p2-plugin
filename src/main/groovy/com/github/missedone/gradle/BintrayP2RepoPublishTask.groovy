@@ -44,7 +44,12 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
     void executeAction() {
         repoDir = repoDir ?: new File(getProject().buildDir, 'updatesite')
         zippedRepoFile = zippedRepoFile ?: new File(getProject().buildDir, 'updatesite.zip')
-        compositePackage = compositePackage ?: DEFAULT_COMPOSITE_PKG_NAME
+        if (compositePackage == null) {
+            // compositePackage can be empty '', while in groovy, empty string is falsy
+            // the elvis operator does not work in the expected way
+            // https://spin.atomicobject.com/2012/11/06/beware-the-elvis-operator-in-groovy/
+            compositePackage = DEFAULT_COMPOSITE_PKG_NAME
+        }
         zipSitePackage = zipSitePackage ?: DEFAULT_ZIPPED_PKG_NAME
         updateSitePackage = updateSitePackage ?: DEFAULT_UPDATESITE_PKG_NAME
 
