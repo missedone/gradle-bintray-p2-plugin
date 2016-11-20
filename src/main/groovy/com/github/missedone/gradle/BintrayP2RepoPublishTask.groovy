@@ -7,6 +7,10 @@ import org.gradle.api.tasks.Optional
 
 class BintrayP2RepoPublishTask extends AbstractBintrayTask {
 
+    static final String DEFAULT_COMPOSITE_PKG_NAME = 'composite';
+    static final String DEFAULT_ZIPPED_PKG_NAME = 'zipped';
+    static final String DEFAULT_UPDATESITE_PKG_NAME = 'updatesites';
+
     @InputDirectory
     @Optional
     File repoDir
@@ -45,13 +49,13 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
             zippedRepoFile = new File(getProject().buildDir, 'updatesite.zip')
         }
         if (compositePackage == null) {
-            compositePackage = 'composite'
+            compositePackage = DEFAULT_COMPOSITE_PKG_NAME
         }
         if (zipSitePackage == null) {
-            zipSitePackage = 'zipped'
+            zipSitePackage = DEFAULT_ZIPPED_PKG_NAME
         }
         if (updateSitePackage == null) {
-            updateSitePackage = 'updatesites'
+            updateSitePackage = DEFAULT_UPDATESITE_PKG_NAME
         }
         assert repoDir.exists(): "repo dir '${repoDir}' does not exist"
         assert zippedRepoFile.exists(): "zipped updatesite file '${zippedRepoFile}' does not exist"
@@ -125,6 +129,13 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         if (compositePackage.isEmpty()) {
             subsiteLoc = "./${updateSitePackage}/${packageVersion}"
         }
+
+        def n = rootNode.'children'[0].find { it.@location == subsiteLoc }
+        if (n != null) {
+            logger.info("child location ${subsiteLoc} already exist, just skip")
+            return
+        }
+
         rootNode.'children'[0].appendNode("child", [location: subsiteLoc])
         new XmlNodePrinter(new PrintWriter(new FileWriter(localFile))).print(rootNode)
 
