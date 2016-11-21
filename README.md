@@ -14,7 +14,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.missedone:gradle-bintray-p2-plugin:1.0.2'
+        classpath 'com.github.missedone:gradle-bintray-p2-plugin:1.1.0'
     }
 }
 
