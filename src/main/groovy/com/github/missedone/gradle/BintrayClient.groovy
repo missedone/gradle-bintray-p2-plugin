@@ -85,7 +85,7 @@ class BintrayClient {
                     println "Uploaded to [$apiUrl$uri.path]."
                 }
                 response.failure = { resp, reader ->
-                    throw new GradleException("Could not upload to [$apiUrl$uri.path]: $resp.statusLine $reader")
+                    throw new GradleException("Failed to upload to [$apiUrl$uri.path]: $resp.statusLine $reader")
                 }
             }
         }
@@ -115,10 +115,10 @@ class BintrayClient {
             headers["Content-Type"] = '*/*'
 
             response.success = { resp ->
-                println "Delete [$apiUrl$uri.path]."
+                println "Deleted [$apiUrl$uri.path]."
             }
             response.failure = { resp, reader ->
-                throw new GradleException("Could not upload to [$apiUrl$uri.path]: $resp.statusLine $reader")
+                throw new GradleException("Failed to delete [$apiUrl$uri.path]: $resp.statusLine $reader")
             }
         }
     }
@@ -154,7 +154,7 @@ class BintrayClient {
                 }
             }
             response.failure = { resp, reader ->
-                throw new IOException("Could not download [$apiUrl$uri.path]: $resp.statusLine $reader")
+                throw new IOException("Failed to download [$apiUrl$uri.path]: $resp.statusLine $reader")
             }
         }
     }
