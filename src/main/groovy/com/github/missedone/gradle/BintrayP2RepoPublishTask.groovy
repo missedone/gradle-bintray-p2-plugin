@@ -43,6 +43,10 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
 
     @Input
     @Optional
+    String mainFeatureId
+
+    @Input
+    @Optional
     boolean override
 
     BintrayP2RepoPublishTask() {
@@ -196,18 +200,16 @@ class BintrayP2RepoPublishTask extends AbstractBintrayTask {
         def featuresDir = new File(updateSiteDir, "features")
         if (featuresDir.exists() && featuresDir.directory) {
             def tree = getProject().fileTree(dir: featuresDir)
-            tree.include('*.feature_*.jar')
-            tree.visit {element ->
-                def str = element.file.name
-                def idx = str.indexOf('_')
-                str = str.substring(idx + 1)
-                idx = str.lastIndexOf('.')
-                str = str.substring(0, idx)
-                idx = str.indexOf('-')
-                if (idx > 0) {
-                    str = str.substring(0, idx)
+            def ptn = mainFeatureId ? "${mainFeatureId}_*.jar" : '*.feature_*.jar'
+            // println "::: pattern ${ptn}"
+            tree.include(ptn)
+            tree.visit {
+                if (ver == null) {
+                    String str = it.file.name
+                    int sidx = str.lastIndexOf('_')
+                    int didx = str.lastIndexOf('.')
+                    ver = str.substring(sidx + 1, didx)
                 }
-                ver = str
             }
         }
         return ver

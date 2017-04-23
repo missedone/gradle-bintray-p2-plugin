@@ -57,6 +57,7 @@ Task Properties:
 * repoOwner - (Required) The repo owner
 * repoName - (Required) The repo name
 * packageVersion - (Optional) Default get from the generated updatesite under `project.buildDir`
+* mainFeatureId - (Optional) The main feature id, used to parse the package version if `packageVersion` is not specified. by default it uses the first feature under `${repoDir}/features`.
 * repoDir - (Optional, File) The location of the P2 repo, default as `project.buildDir/updatesite`
 * zippedRepoFile - (Optional, File) the location of the zipped repo file, default as `project.buildDir/updatesite.zip`
 * compositePackage - (Optional) The Bintray package for composite updatesite, default as `composite`. **Please make sure it's created in the Bintray repo before executing the task**.

@@ -41,4 +41,5 @@ class BintrayP2Extension {
     String zipSitePackage
     String updateSitePackage
     String subCompositeStrategy
+    String mainFeatureId
 }
