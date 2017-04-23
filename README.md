@@ -56,10 +56,10 @@ Task Properties:
 * apiKey - (Required) The user's api key, seek order: task properties -> system properties -> environment variables.
 * repoOwner - (Required) The repo owner
 * repoName - (Required) The repo name
-* packageVersion - (Optional) Default get from the generated updatesite under `project.buildDir`
+* packageVersion - (Optional) Default get from the generated updatesite under `${project.buildDir}`
 * mainFeatureId - (Optional) The main feature id, used to parse the package version if `packageVersion` is not specified. by default it uses the first feature under `${repoDir}/features`.
-* repoDir - (Optional, File) The location of the P2 repo, default as `project.buildDir/updatesite`
-* zippedRepoFile - (Optional, File) the location of the zipped repo file, default as `project.buildDir/updatesite.zip`
+* repoDir - (Optional, File) The location of the P2 repo, default as `${project.buildDir}/updatesite`
+* zippedRepoFile - (Optional, File) the location of the zipped repo file, default as `${project.buildDir}/updatesite.zip`
 * compositePackage - (Optional) The Bintray package for composite updatesite, default as `composite`. **Please make sure it's created in the Bintray repo before executing the task**.
 * zipSitePackage - (Optional) The Bintray package for zipped updatesite, default as `zipped`. **Please make sure it's created in the Bintray repo before executing the task**.
 * updateSitePackage - (Optional) The Bintray package for updatesite, default as `updatesites`. **Please make sure it's created in the Bintray repo before executing the task**.
@@ -68,11 +68,11 @@ Task Properties:
 Example in `build.gradle`:
 ```
 publishP2Repo {
-	repoOwner = 'testng-team'
-	repoName = 'testng-eclipse'
+    repoOwner = 'testng-team'
+    repoName = 'testng-eclipse'
 
-	// set `compositePackage` an empty stirng to store the compoiste update site (compositeContent.xml, compositeArtifacts.xml) to the repo root, for example: http://dl.bintray.com/testng-team/testng-eclipse/
-	compositePackage = ''
+    // set `compositePackage` an empty stirng to store the compoiste update site (compositeContent.xml, compositeArtifacts.xml) to the repo root, for example: http://dl.bintray.com/testng-team/testng-eclipse/
+    compositePackage = ''
 
     repoDir = new File("target/site")
     zippedRepoFile = new File("target/site_assembly.zip")
@@ -104,5 +104,5 @@ Task Properties:
 
 ## Example:
 
-* TestNG Eclipse [beta updatesite](http://dl.bintray.com/testng-team/testng-eclipse/), [build.gradle](https://github.com/cbeust/testng-eclipse/blob/master/testng-eclipse-update-site/build.gradle)
-* TestNG P2 [beta updatesite](http://dl.bintray.com/testng-team/testng-p2-beta/), [build.gradle](https://github.com/testng-team/testng-p2/blob/master/build.gradle)
+* [TestNG Eclipse](https://github.com/cbeust/testng-eclipse): [beta](http://dl.bintray.com/testng-team/testng-eclipse/) and [release](http://dl.bintray.com/testng-team/testng-eclipse-eclipse/) updatesite, see detail in [build.gradle](https://github.com/cbeust/testng-eclipse/blob/master/testng-eclipse-update-site/build.gradle)
+* [TestNG P2](https://github.com/testng-team/testng-p2): [beta](http://dl.bintray.com/testng-team/testng-p2/) updatesite, see detail in [build.gradle](https://github.com/testng-team/testng-p2/blob/master/build.gradle)
